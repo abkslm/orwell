@@ -33,14 +33,16 @@ def logout_page():
     return redirect('/')
 
 
-@app.route('/redir/linkedin')
-def linkedin_redir():
-    return redirects.linkedin("abkslm")
-
-
-@app.route('/redir/github')
-def github_redir():
-    return redirects.github("abkslm")
+# TODO use sql here, check if path has a value link in db and redirect (that way they can easily be modified and are
+#  persistent)
+@app.route('/redir/<path:path>')
+def redir(path):
+    if path == 'linkedin':
+        return redirects.linkedin("abkslm")
+    elif path == 'github':
+        return redirects.github("abkslm")
+    elif path == 'resume':
+        return redirects.static("AndrewBMooreResume.pdf", "pdf")
 
 
 if __name__ == '__main__':
