@@ -1,0 +1,36 @@
+version: '3'
+services:
+  orwell-web:
+    build: Orwell-Web-Dockerfile
+    container_name: orwell-web
+    restart: always
+    network_mode: host
+    secrets:
+      - db_web_password
+    privileged: true
+  orwell-db:
+    image: mariadb
+    restart: always
+    environment:
+      MARIADB_USER: web
+      MARIADB_PASSWORD_FILE: /run/secrets/db_web_password
+      MARIADB_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+      MARIADB_DATABASE: orwell
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    secrets:
+      - db_root_password
+      - db_web_password
+    privileged: true
+
+secrets:
+  db_root_password:
+    file: ./secrets/db_root_password.txt
+  db_web_password:
+    file: ./secrets/db_web_password.txt
+      
+
+volumes:
+  db_data:
